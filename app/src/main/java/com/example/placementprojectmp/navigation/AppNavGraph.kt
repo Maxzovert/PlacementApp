@@ -272,6 +272,11 @@ private fun androidx.navigation.NavGraphBuilder.studentGraph(
                 onNavigateToProfileForm = {
                     navController.navigate(Routes.StudentRoutes.StudentProfileForm)
                 },
+                onNavigateToProfile = {
+                    navController.navigate(Routes.StudentRoutes.Profile) {
+                        launchSingleTop = true
+                    }
+                },
                 onSubmitClick = {
                     scope.launch {
                         if (jobId.toLongOrNull() == null) {

@@ -62,6 +62,7 @@ fun CompanyIdCard(
     secondaryLocation: String = "Mountain View, USA",
     email: String = "careers@nexora.systems",
     websiteDisplay: String = "www.nexora.systems",
+    onWebsiteClick: (() -> Unit)? = null,
     industryType: String = "Technology",
     companyType: String = "Product Based",
     globalOps: String = "APAC + North America"
@@ -184,7 +185,13 @@ fun CompanyIdCard(
             Column(
                 modifier = Modifier
                     .fillMaxWidth(0.78f)
-                    .clickable { }
+                    .then(
+                        if (onWebsiteClick != null) {
+                            Modifier.clickable { onWebsiteClick() }
+                        } else {
+                            Modifier
+                        }
+                    )
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,

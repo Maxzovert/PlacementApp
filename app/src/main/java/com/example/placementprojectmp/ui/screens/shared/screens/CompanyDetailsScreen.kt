@@ -63,6 +63,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -309,6 +310,8 @@ private fun ExpandedDrawerContent(
     onAddNoteClick: () -> Unit,
     contentBelowCompanyIdCard: (@Composable () -> Unit)? = null
 ) {
+    val uriHandler = LocalUriHandler.current
+    val companyWebsiteUrl = "https://www.nexora.systems"
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -331,6 +334,7 @@ private fun ExpandedDrawerContent(
             item {
                 CompanyIdCard(
                     onAddNoteClick = onAddNoteClick,
+                    onWebsiteClick = { uriHandler.openUri(companyWebsiteUrl) },
                     betweenOverviewAndDetails = if (stickyNotes.isNotEmpty()) {
                         { StickyNotesRow(stickyNotes = stickyNotes) }
                     } else {

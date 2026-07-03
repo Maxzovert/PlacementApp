@@ -150,7 +150,7 @@ fun StudentDashboardScreen(
         listOf(
             DriveItem("Google", "10:00 AM", "Today"),
             DriveItem("Microsoft", "2:00 PM", "Tomorrow"),
-            DriveItem("Amazon", "11:00 AM", "Mar 10")
+            DriveItem("Amazon", "11:00 AM", "12 Aug")
         )
     }
     val drives = remember(driveBrowseState.drives) {

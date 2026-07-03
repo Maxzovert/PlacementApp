@@ -30,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -42,6 +43,8 @@ import com.example.placementprojectmp.ui.screens.shared.component.SelectionRound
 import com.example.placementprojectmp.ui.screens.shared.component.VenueRegDetailsCapsule
 import com.example.placementprojectmp.ui.theme.colormap.ApplicationStatus
 import com.example.placementprojectmp.ui.theme.colormap.ColorMapper
+import com.example.placementprojectmp.data.local.OpportunitiesCatalogHolder
+import com.example.placementprojectmp.data.local.StudentOpportunitiesFallbackData
 import kotlin.math.absoluteValue
 
 private data class JobDetailPresentation(
@@ -102,9 +105,9 @@ private fun presentationForJobId(jobId: String): JobDetailPresentation {
     )
     val venue = venues[(h / 2) % venues.size]
     val deadlines = listOf(
-        "18 Apr 2026 · 11:59 PM",
-        "02 May 2026 · 6:00 PM",
-        "30 Apr 2026 · 5:30 PM"
+        "18 Aug 2026 · 11:59 PM",
+        "02 Sep 2026 · 6:00 PM",
+        "30 Aug 2026 · 5:30 PM"
     )
     val regDeadline = deadlines[h % deadlines.size]
     val dotStatuses = listOf(
@@ -121,22 +124,22 @@ private fun presentationForJobId(jobId: String): JobDetailPresentation {
     val showPreferred = h % 2 == 0
     val roundsTemplates = listOf(
         listOf(
-            SelectionRoundItem("Aptitude Round", "08 Apr", true),
-            SelectionRoundItem("Technical Interview", "14 Apr", true),
-            SelectionRoundItem("HR Round", "22 Apr", false),
-            SelectionRoundItem("Managerial", "28 Apr", false)
+            SelectionRoundItem("Aptitude Round", "08 Aug", true),
+            SelectionRoundItem("Technical Interview", "14 Aug", true),
+            SelectionRoundItem("HR Round", "22 Aug", false),
+            SelectionRoundItem("Managerial", "28 Aug", false)
         ),
         listOf(
-            SelectionRoundItem("Online Assessment", "05 May", true),
-            SelectionRoundItem("Technical Round 1", "12 May", false),
-            SelectionRoundItem("Technical Round 2", "18 May", false),
-            SelectionRoundItem("HR & Culture", "24 May", false),
-            SelectionRoundItem("Offer Discussion", "01 Jun", false)
+            SelectionRoundItem("Online Assessment", "05 Sep", true),
+            SelectionRoundItem("Technical Round 1", "12 Sep", false),
+            SelectionRoundItem("Technical Round 2", "18 Sep", false),
+            SelectionRoundItem("HR & Culture", "24 Sep", false),
+            SelectionRoundItem("Offer Discussion", "01 Oct", false)
         ),
         listOf(
-            SelectionRoundItem("Coding Screen", "10 Apr", true),
-            SelectionRoundItem("System Design", "17 Apr", false),
-            SelectionRoundItem("HR Round", "25 Apr", false)
+            SelectionRoundItem("Coding Screen", "10 Aug", true),
+            SelectionRoundItem("System Design", "17 Aug", false),
+            SelectionRoundItem("HR Round", "25 Aug", false)
         )
     )
     val selectionRounds = roundsTemplates[h % roundsTemplates.size]
@@ -184,6 +187,15 @@ fun JobDetailScreen(
     showApplyButton: Boolean = true
 ) {
     val p = remember(jobId) { presentationForJobId(jobId) }
+    val uriHandler = LocalUriHandler.current
+    val selectedJob = remember(jobId) {
+        OpportunitiesCatalogHolder.jobs.firstOrNull { it.id == jobId }
+            ?: StudentOpportunitiesFallbackData.jobs.firstOrNull { it.id == jobId }
+    }
+    val companyWebsiteUrl = remember(jobId) { StudentOpportunitiesFallbackData.websiteUrlForJob(jobId) }
+    val companyWebsiteDisplay = remember(companyWebsiteUrl) {
+        companyWebsiteUrl?.let { StudentOpportunitiesFallbackData.websiteDisplayForUrl(it) }
+    }
 
     LazyColumn(
         modifier = modifier.fillMaxSize(),
@@ -202,6 +214,11 @@ fun JobDetailScreen(
             CompanyIdCard(
                 modifier = Modifier.padding(horizontal = 20.dp),
                 placementName = p.roleTitle,
+                companyName = selectedJob?.companyName?.uppercase() ?: "NEXORA SYSTEMS",
+                websiteDisplay = companyWebsiteDisplay ?: "www.nexora.systems",
+                onWebsiteClick = companyWebsiteUrl?.let { url ->
+                    { uriHandler.openUri(url) }
+                },
                 onAddNoteClick = { }
             )
         }

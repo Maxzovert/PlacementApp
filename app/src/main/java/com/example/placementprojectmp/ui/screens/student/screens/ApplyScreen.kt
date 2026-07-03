@@ -25,6 +25,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,7 +40,10 @@ import com.example.placementprojectmp.data.local.StudentOpportunitiesFallbackDat
 import com.example.placementprojectmp.ui.screens.shared.cards.DriveStyleCapsuleChip
 import com.example.placementprojectmp.ui.screens.shared.cards.LogoImage
 import com.example.placementprojectmp.ui.screens.shared.component.AppTopBar
+import com.example.placementprojectmp.ui.components.ProfilePlatform
 import com.example.placementprojectmp.viewmodel.JobUiModel
+import com.example.placementprojectmp.viewmodel.StudentPersonalDraftViewModel
+import org.koin.androidx.compose.koinViewModel
 import java.util.Locale
 
 /** Matches [com.example.placementprojectmp.ui.screens.shared.screens.ApplicationScreen]: AppTopBar row + 12.dp spacer below it. */
@@ -56,8 +61,36 @@ fun ApplyScreen(
     onMenuClick: () -> Unit = {},
     onNotificationClick: () -> Unit = {},
     onNavigateToProfileForm: () -> Unit = {},
+    onNavigateToProfile: () -> Unit = {},
     onSubmitClick: () -> Unit = {}
 ) {
+    val personalDraftViewModel: StudentPersonalDraftViewModel = koinViewModel()
+    val personalDraft by personalDraftViewModel.draft.collectAsState()
+    val connectorLinks = remember(personalDraft.connectorLinksJson) {
+        try {
+            if (personalDraft.connectorLinksJson.isNotBlank() && personalDraft.connectorLinksJson != "{}") {
+                kotlinx.serialization.json.Json.decodeFromString<Map<ProfilePlatform, String>>(
+                    personalDraft.connectorLinksJson
+                )
+            } else {
+                emptyMap()
+            }
+        } catch (e: Exception) {
+            emptyMap()
+        }
+    }
+    val isProfileComplete = remember(personalDraft, connectorLinks) {
+        personalDraft.profileImageUri.isNotBlank() &&
+            (personalDraft.role.isNotBlank() || personalDraft.fullName.isNotBlank()) &&
+            connectorLinks[ProfilePlatform.Portfolio]?.isNotBlank() == true &&
+            personalDraft.resumePdfUri.isNotBlank() &&
+            (
+                personalDraft.languagesSelected.isNotEmpty() ||
+                    personalDraft.frameworksSelected.isNotEmpty() ||
+                    personalDraft.toolsSelected.isNotEmpty() ||
+                    personalDraft.softSkillsSelected.isNotEmpty()
+                )
+    }
     val selectedJob = remember(selectedJobId) {
         OpportunitiesCatalogHolder.jobs.firstOrNull { it.id == selectedJobId }
             ?: StudentOpportunitiesFallbackData.jobs.firstOrNull { it.id == selectedJobId }
@@ -75,6 +108,33 @@ fun ApplyScreen(
                 onNotificationClick = onNotificationClick
             )
         }
+        if (!isProfileComplete) {
+            item {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp, vertical = 24.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    horizontalAlignment = Alignment.Start
+                ) {
+                    Text(
+                        text = "Please complete your profile before applying for opportunities.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Button(
+                        onClick = onNavigateToProfile,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary
+                        ),
+                        shape = MaterialTheme.shapes.medium
+                    ) {
+                        Text(text = "Go to Profile")
+                    }
+                }
+            }
+        } else {
         if (selectedJob != null) {
             item {
                 Box(
@@ -144,6 +204,7 @@ fun ApplyScreen(
             ) {
                 Text(text = "Submit")
             }
+        }
         }
     }
 }

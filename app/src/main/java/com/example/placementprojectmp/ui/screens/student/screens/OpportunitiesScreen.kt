@@ -206,7 +206,8 @@ fun OpportunitiesScreen(
                 modifier = Modifier.padding(horizontal = 20.dp),
                 query = searchQuery,
                 onQueryChange = { searchQuery = it },
-                placeholder = "Search jobs and drives"
+                placeholder = "Search jobs and drives",
+                showFilterIcon = false
             )
         }
         item {
