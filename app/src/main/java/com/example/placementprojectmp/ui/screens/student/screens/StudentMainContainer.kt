@@ -44,6 +44,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -250,7 +251,7 @@ private fun StudentBottomNav(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 8.dp, vertical = 10.dp),
+                .padding(horizontal = 4.dp, vertical = 10.dp),
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -288,7 +289,7 @@ private fun StudentBottomNavItem(
     val interactionSource = remember { MutableInteractionSource() }
     Box(
         modifier = modifier
-            .padding(4.dp)
+            .padding(horizontal = 2.dp, vertical = 4.dp)
             .clip(CircleShape)
             .clickable(
                 interactionSource = interactionSource,
@@ -350,6 +351,9 @@ private fun StudentBottomNavItem(
                     Text(
                         text = item.label,
                         style = MaterialTheme.typography.labelSmall,
+                        maxLines = 1,
+                        softWrap = false,
+                        overflow = TextOverflow.Visible,
                         color = if (selected) {
                             MaterialTheme.colorScheme.primary
                         } else {
