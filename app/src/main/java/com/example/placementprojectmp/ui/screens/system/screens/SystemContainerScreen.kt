@@ -41,6 +41,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.placementprojectmp.R
 import androidx.navigation.NavHostController
@@ -194,7 +195,7 @@ private fun SystemBottomNav(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 8.dp, vertical = 10.dp),
+                .padding(horizontal = 4.dp, vertical = 10.dp),
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -253,7 +254,7 @@ private fun SystemBottomNavItem(
 
     Box(
         modifier = modifier
-            .padding(4.dp)
+            .padding(horizontal = 2.dp, vertical = 4.dp)
             .clip(CircleShape)
             .then(edgeTabClickable),
         contentAlignment = Alignment.Center
@@ -313,6 +314,9 @@ private fun SystemBottomNavItem(
                     Text(
                         text = item.label,
                         style = MaterialTheme.typography.labelSmall,
+                        maxLines = 1,
+                        softWrap = false,
+                        overflow = TextOverflow.Visible,
                         color = if (selected) {
                             MaterialTheme.colorScheme.primary
                         } else {
