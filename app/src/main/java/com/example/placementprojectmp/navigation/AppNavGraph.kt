@@ -144,7 +144,7 @@ private fun androidx.navigation.NavGraphBuilder.startupGraph(
                     }
                     navController.navigate(graphRoute) {
                         launchSingleTop = true
-                        popUpTo(Routes.StartupRoutes.Login) { inclusive = true }
+                        popUpTo(Routes.GraphRoutes.Startup) { inclusive = true }
                     }
                 }
             )
@@ -167,7 +167,7 @@ private fun androidx.navigation.NavGraphBuilder.startupGraph(
                     }
                     navController.navigate(graphRoute) {
                         launchSingleTop = true
-                        popUpTo(Routes.StartupRoutes.Login) { inclusive = true }
+                        popUpTo(Routes.GraphRoutes.Startup) { inclusive = true }
                     }
                 }
             )

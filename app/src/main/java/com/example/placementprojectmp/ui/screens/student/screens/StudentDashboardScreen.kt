@@ -29,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.placementprojectmp.R
 import com.example.placementprojectmp.ui.screens.shared.component.AppTopBar
 import com.example.placementprojectmp.ui.screens.shared.component.ApplicationsSection
 import com.example.placementprojectmp.ui.screens.shared.component.ApplicationItem
@@ -238,7 +239,13 @@ fun StudentDashboardScreen(
             )
         }
         item {
-            DashboardUserProfile(userName = resolvedUserName)
+            DashboardUserProfile(
+                userName = resolvedUserName,
+                imageResId = if (personalDraftViewModel.profileImageUri != null)
+                    R.drawable.pfp_user
+                else
+                    R.drawable.default_user
+            )
         }
         item {
             AppSearchBar(
