@@ -1,10 +1,14 @@
 package com.example.placementprojectmp.ui.components
 
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -33,12 +37,15 @@ fun DriveSection(
             color = MaterialTheme.colorScheme.onSurface
         )
         Spacer(modifier = Modifier.height(12.dp))
-        LazyRow(
+        Row(
+            modifier = Modifier
+                .height(IntrinsicSize.Max)
+                .horizontalScroll(rememberScrollState()),
             horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(12.dp)
         ) {
-            items(drives.size) { index ->
-                val drive = drives[index]
+            drives.forEachIndexed { index, drive ->
                 DriveCard(
+                    modifier = Modifier.fillMaxHeight(),
                     companyName = drive.companyName,
                     driveTiming = drive.driveTiming,
                     date = drive.date,

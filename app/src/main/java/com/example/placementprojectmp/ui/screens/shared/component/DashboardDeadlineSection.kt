@@ -44,13 +44,21 @@ fun ApplicationsSection(
         Column(
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            applications.forEach { app ->
-                ApplicationStatusCard(
-                    modifier = Modifier.fillMaxWidth(),
-                    companyName = app.companyName,
-                    role = app.role,
-                    status = app.status
+            if (applications.isEmpty()) {
+                Text(
+                    text = "You haven't applied to any drives yet.\nApply to a drive to see your applications here.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+            } else {
+                applications.forEach { app ->
+                    ApplicationStatusCard(
+                        modifier = Modifier.fillMaxWidth(),
+                        companyName = app.companyName,
+                        role = app.role,
+                        status = app.status
+                    )
+                }
             }
         }
     }
